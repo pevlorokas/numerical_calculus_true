@@ -13,21 +13,27 @@ display("\tbuscar las raices de los polinomios de laguerre.\n")
 
 
 addpath('../biblioteca')
+addpath('../biblioteca_entrega2')
 format long g
 ##Una función propia para que te haga el polinomio de Laguerre
 ##del grado que le indiques, no requiere de la matriz para ello.
-
+disp("Solo el recordatorio de que las funciones estan planteadas de forma\n")
+disp("generica para todo polinomio.\nPulsa enter para sacar a la luz todo el script")
+pause
+disp("\nEl valor del polinomio de Laguerre de grado 7 que nos pide.\n")
 pol7 = polyLaguerre_solo(7)
 
 ##d_pol7 = polyder(pol7) # Su derivada (que no se quiere para nada)
+disp("La busqueda de las raices del polinomio\n")
 raicespol7Laguerre = cerosLaguerre(pol7,100) #funcion del apartado 2
-
+disp("Los valores de las raices aproximadas (iguales a las dadas al final de la hoja): \n")
 vals=polyval(pol7, raicespol7Laguerre)
 
 disp("Como se puede ver, tiene unos resultados bastante próximos a las raices\n con un error de 10^-11\n")
 disp("Ahora el apartado 3, pulsa para ver los coeficientes de Lagrange de\n")
 disp("las raices que hemos calculado\n")
 
+disp("Los factores de lagrange por cada raiz del polinomio sacada.\n")
 facts=factores_lagrange(raicespol7Laguerre)
 
 display("Apartado 4, con la formula recurrente a continuacion: \n")
@@ -47,26 +53,29 @@ function f = intExp(n,x)
 endfunction
 #Esta funcion es recurrente, se hace rapido en papel al hacer integracion por partes
 g=@(x,n) intExp(n,x)  #Una funcion para facilitar la escritura
-##m=@(x) e^(-x)*x^9
-casi_infinito=10000000000;
-facts(1,:);
-c=[];
 
-##g(casi_infinito,3)-g(0,3)
+casi_infinito=10000000000; #Es un valor que obviamente no es infinito, pero
+#octave da muchos problemas con las indeterminaciones de los límites para
+#integrales impropias así que con este numero nos da el resultado exacto
+#y no hay problemas de cálculo.
+
+c=[]; #los pesos...
+
+disp("Evaluacion de pesos procesando...\n")
 for i=1:length(facts(:,1))
   sum=0;
   for j=1:length(facts(1,:))
     sum= sum+(facts(i,j)*(g(casi_infinito,(length(facts(i,:))-j))-g(0,(length(facts(i,:))-j))));
   endfor
-##    sum= sum+(facts(j,i)*(g(casi_infinito,length(facts(i,:))-j+1)-g(0,length(facts(j,:))-i+1)));
-##  endfor
+
   c=[c sum];
 endfor
-
-
+disp("Pesos del metodo de cuadratura (coinciden con los que nos dás): \n")
+c
 disp("\nIntegral de los 7 puntos: \n")
-h=@(x) 1./(x.^2);
 
+
+disp("Una pruebecilla...")
 suma=0;
 for i=1:length(raicespol7Laguerre)
   suma= suma+polyval(pol7,raicespol7Laguerre(i))*c(i);
@@ -74,20 +83,22 @@ for i=1:length(raicespol7Laguerre)
 endfor
 suma
 
+
+disp("\nEstos son los resultados de las integrales de las funciones que nos dan:\n")
 #primera funcion (1) 
+suma1=0;
+for i=1:length(raicespol7Laguerre)
+  suma1=suma1+c(i)*(raicespol7Laguerre(i));
+endfor
+suma1
+
 suma2=0;
 for i=1:length(raicespol7Laguerre)
-  suma2=suma2+c(i)*(raicespol7Laguerre(i));
+  suma2=suma2+c(i)*raicespol7Laguerre(i)*(raicespol7Laguerre(i));
 endfor
 suma2
 
-suma3=0;
-for i=1:length(raicespol7Laguerre)
-  suma3=suma3+c(i)*raicespol7Laguerre(i)*(raicespol7Laguerre(i));
-endfor
-suma3
-
-disp("\nAhora el apartado 7\n")
+disp("\nAhora el apartado 7\nPrimera función:\n")
 funcion1=@(x) x.*cos(x);
 suma6_1=0;
 for i=1:length(raicespol7Laguerre)
@@ -96,6 +107,7 @@ for i=1:length(raicespol7Laguerre)
 endfor
 suma6_1
 
+disp("\nSegunda función:")
 funcion2=@(x) e^(-x^(2)+2*x);
 suma6_2=0;
 for i=1:length(raicespol7Laguerre)
@@ -103,7 +115,7 @@ for i=1:length(raicespol7Laguerre)
 endfor
 suma6_2
 
-disp("\n\n\nY ya está por fin he acabado este ejercicio infernal\n")
+disp("\n\n\nY ya está, por fín he acabado este ejercicio infernal\n")
 
 
 

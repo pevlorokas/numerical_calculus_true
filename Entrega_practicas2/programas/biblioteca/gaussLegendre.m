@@ -11,14 +11,14 @@
 
 
 function int=gaussLegendre(f,a,b,N,nG)
-
-h=(b-a)/N;
-int=0;
-for k=1:N
-ak=a+(k-1)*h;
-fk=@(x) f(ak+(1+x)*h/2);
-int=int+gaussLegendreSimple(fk,nG);
-endfor         
-int=int*h/2;  
+  
+  h=(b-a)/N;
+  int=0;
+  for k=1:N
+    ak=a+(k-1)*h;
+    fk=@(x) f(ak+(1+x)*h/2);
+    int=int+gaussLegendreSimple(fk,nG);
+  endfor         
+  int=int*h/2;  
 endfunction
 
